@@ -36,6 +36,15 @@ def eval(s: Term): M[Int] =
       )
     )
   }
+  /* Same as
+  s match {
+    case Con(a) => pure(a)
+    case Div(t, u) => for {
+      a <- eval(t)
+      b <- eval(u)
+    } yield (a / b)
+  }
+  */
 
 
 
@@ -114,6 +123,16 @@ def eval(s: Term): M[Int] =
       )
     )
   }
+  /* Same as
+  s match {
+    case Con(a) => pure(a)
+    case Div(t, u) => for {
+      a <- eval(t)
+      b <- eval(u)
+      if (b == 0) || raise("Divide by zero")
+    } yield pure(a / b)
+  }
+  */
 
 
 
@@ -191,6 +210,16 @@ def eval(s: Term): M[Int] =
       )
     )
   }
+  /* Same as
+  s match {
+    case Con(a) => pure(a)
+    case Div(t, u) => for {
+      a <- eval(t)
+      b <- eval(u)
+      updateState
+    } yield pure(a / b)
+  }
+  */
 
 
 
@@ -275,3 +304,16 @@ def eval(s: Term): M[Int] =
       )
     )
   }
+  /* Same as
+  s match {
+    case Con(a) => for {
+      output(toOutput(s, a))
+    } yield pure(a)
+
+    case Div(t, u) => for {
+      a <- eval(t)
+      b <- eval(u)
+      output(toOutput(s, a / b))
+    } yield pure(a / b)
+  }
+  */
